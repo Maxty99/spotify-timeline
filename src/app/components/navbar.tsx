@@ -2,9 +2,6 @@ import Link from "next/link";
 import { readDir, BaseDirectory } from '@tauri-apps/api/fs';
 
 export default async function Navbar() {
-    let environment = process.env.RUNNING_IN ?? 'web';
-
-
     return (
         <nav className="w-full h-16 bg-transparent">
             <div className="flex justify-between items-center h-full w-full px-5 2xl:px-16">
