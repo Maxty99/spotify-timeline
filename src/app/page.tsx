@@ -1,9 +1,9 @@
-import Greet from './greet'
+import Greet from './components/greet'
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
-      <Greet />
+    <main className="">
+      <Greet name="Home" />
     </main>
   )
 }
