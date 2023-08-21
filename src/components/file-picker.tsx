@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
-import Folder from "@/components/folder";
+import Folder from "@/components/icons/folder";
 import useSpotifyFile from "@/hooks/spotify-file-hook";
 import { ContextStorage, SpotifyHistoryFile } from "@/components/spotify-file-provider";
 import { useEffect, useMemo, useState } from "react";
