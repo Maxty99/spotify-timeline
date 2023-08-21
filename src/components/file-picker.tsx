@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BaseDirectory, FileEntry, readDir } from "@tauri-apps/api/fs";
 import { open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
+import ChevronDown from "@/components/icons/chevron-down";
 
 
 export default function FilePicker() {
@@ -47,6 +48,7 @@ export default function FilePicker() {
                 <DropdownTrigger>
                     <Button
                         variant="bordered"
+                        endContent={<ChevronDown />}
                     >
                         Choose a file
                     </Button>
