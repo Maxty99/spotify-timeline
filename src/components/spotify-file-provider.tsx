@@ -22,12 +22,6 @@ export type SpotifyHistoryFile = {
     data: SpotifyHistoryEntry[],
 }
 
-type EmptyReason = 'error' | 'firstlaunch'
-
-type EmptyStorage = {
-    reason: EmptyReason
-    error?: unknown
-};
 
 export type ContextStorage = string | undefined;
 
