@@ -60,14 +60,9 @@ fn move_files_to_data_folder(
     Ok(())
 }
 
-#[tauri::command]
-fn greet(name: String) -> String {
-    format!("Hello, {name}")
-}
-
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![move_files_to_data_folder, greet])
+        .invoke_handler(tauri::generate_handler![move_files_to_data_folder])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
