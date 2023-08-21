@@ -1,6 +1,6 @@
 export default function Timeline() {
     return (
-        <main className="">
+        <main>
             Hello, Timeline
         </main>
     )
