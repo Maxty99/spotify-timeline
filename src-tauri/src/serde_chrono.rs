@@ -3,7 +3,7 @@ use std::fmt;
 use chrono::{TimeZone, Utc};
 use serde::{
     de::{Error, Visitor},
-    Deserializer,
+    Deserializer, Serializer,
 };
 
 struct StringVisitor;
@@ -46,7 +46,7 @@ where
 {
     let date_string = deserializer.deserialize_string(StringVisitor)?;
     let date = Utc
-        .datetime_from_str(&date_string, "%Y-%m-%dT%H:%M:%S")
+        .datetime_from_str(&date_string, "%Y-%m-%dT%H:%M:%SZ")
         .map_err(Error::custom)?;
     Ok(date.date_naive())
 }
@@ -57,4 +57,12 @@ where
 {
     let milis_number = deserializer.deserialize_u64(U64Visitor)?;
     Ok(chrono::Duration::milliseconds(milis_number as i64))
+}
+
+pub fn serialize_milis<S>(duration: &chrono::Duration, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let milis_number = duration.num_milliseconds() as u64;
+    serializer.serialize_u64(milis_number)
 }

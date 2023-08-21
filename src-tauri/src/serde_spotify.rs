@@ -1,6 +1,6 @@
 use serde::{
     de::{Error, Visitor},
-    Deserializer,
+    Deserialize, Deserializer, Serialize, Serializer,
 };
 use std::fmt::{self, Display, Formatter};
 
@@ -8,7 +8,7 @@ use std::fmt::{self, Display, Formatter};
 /// lot of times where I might need to access just the id  
 /// portion of the [TrackURI]
 #[derive(Debug)]
-pub struct TrackURI(String);
+pub struct TrackURI(pub String);
 
 impl Display for TrackURI {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
@@ -42,11 +42,20 @@ impl<'de> Visitor<'de> for TrackURIVisitor {
         }
     }
 }
-
-pub fn deserialize_track_uri<'de, D>(deserializer: D) -> Result<TrackURI, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let track_uri = deserializer.deserialize_str(TrackURIVisitor)?;
-    Ok(track_uri)
+impl Serialize for TrackURI {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(&format!("{}", self))
+    }
+}
+impl<'de> Deserialize<'de> for TrackURI {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let track_uri = deserializer.deserialize_str(TrackURIVisitor)?;
+        Ok(track_uri)
+    }
 }

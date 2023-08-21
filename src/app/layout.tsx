@@ -1,7 +1,10 @@
+'use client'
+
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Navbar from "./components/navbar";
+import AppNavbar from "@/components/navbar";
+import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,11 +18,17 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
+  //TODO: Add default and theme switching
+  // https://nextui.org/docs/customization/dark-mode#nextjs-app-directory-setup
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
-        {children}
+        <Providers>
+          <AppNavbar />
+          {children}
+        </Providers>
       </body>
     </html>
   )

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Calendar() {
+export default function NotFound() {
     return (
         <main className="">
             <p>How did this happen (Error not found)</p>

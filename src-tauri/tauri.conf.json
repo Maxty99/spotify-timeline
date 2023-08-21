@@ -11,7 +11,18 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": false,
+      "dialog": {
+        "open": true
+      },
+      "fs": {
+        "scope": [
+          "$APPDATA"
+        ],
+        "readFile": true,
+        "readDir": true,
+        "exists": true
+      }
     },
     "bundle": {
       "active": true,
@@ -58,7 +69,9 @@
         "height": 600,
         "resizable": true,
         "title": "Spotify Timeline",
-        "width": 800
+        "width": 800,
+        "minWidth": 800,
+        "minHeight": 600
       }
     ]
   }
