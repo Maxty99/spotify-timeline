@@ -12,6 +12,7 @@ import ChevronDown from "@/components/icons/chevron-down";
 
 export default function FilePicker() {
     let spotify = useSpotifyFile();
+
     let [files, setFiles] = useState<FileEntry[]>([]);
     useEffect(() => {
         readDir('', { dir: BaseDirectory.AppData, recursive: false })
@@ -40,7 +41,6 @@ export default function FilePicker() {
 
     }
 
-    // ✓
     return (
         <ButtonGroup>
             <Dropdown>
