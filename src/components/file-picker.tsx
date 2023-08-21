@@ -3,8 +3,7 @@
 import { Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import Folder from "@/components/icons/folder";
 import useSpotifyFile from "@/hooks/spotify-file-hook";
-import { ContextStorage, SpotifyHistoryFile } from "@/components/spotify-file-provider";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { BaseDirectory, FileEntry, readDir } from "@tauri-apps/api/fs";
 import { open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
