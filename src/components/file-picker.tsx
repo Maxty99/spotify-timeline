@@ -55,7 +55,8 @@ export default function FilePicker() {
                 <DropdownMenu
                     aria-label="History file selector"
                     disallowEmptySelection
-                    selectionMode="single"
+                    // This fixes a random checkmark appearing if you select and close fast
+                    selectionMode="none"
                     onAction={(key) => {
                         spotify.callback(key.toString());
                     }}
