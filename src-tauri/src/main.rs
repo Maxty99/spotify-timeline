@@ -85,6 +85,8 @@ fn main() {
             if let Ok(toml_string) = file_read_result {
                 app.manage(toml_string);
             } else {
+                // Add an empty string to state otherwise app crashes on launch
+                app.manage(String::from(""));
                 // Can't read the file (missing/permissions)
                 // Can't end with err because it just closes immediately 
                 tauri::api::dialog::message(main_window.as_ref(), "Warning", "Could not read the spotify_config.toml file, please make sure it exists and is readable. The program will not work correctly without it")
