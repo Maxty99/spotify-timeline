@@ -19,9 +19,6 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
 
-  //TODO: Add default and theme switching
-  // https://nextui.org/docs/customization/dark-mode#nextjs-app-directory-setup
-
   return (
     <html lang="en">
       <body className={inter.className}>
