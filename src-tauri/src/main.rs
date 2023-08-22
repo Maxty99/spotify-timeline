@@ -10,6 +10,7 @@ use error::BackendError;
 use serde::{Deserialize, Serialize};
 use serde_chrono::{deserialize_datetime, deserialize_milis, serialize_milis};
 use serde_spotify::TrackURI;
+use tauri::{Manager, State};
 
 #[derive(Deserialize, Serialize)]
 struct SpotifyHistoryEntry {
@@ -36,6 +37,16 @@ struct SpotifyHistoryFile {
     data: Vec<SpotifyHistoryEntry>,
 }
 
+#[derive(Deserialize)]
+struct Config {
+    spotify: Spotify
+}
+
+#[derive(Deserialize)]
+struct Spotify {
+    secret: String
+}
+
 #[tauri::command]
 fn move_files_to_data_folder(
     app_handle: tauri::AppHandle,
@@ -60,9 +71,28 @@ fn move_files_to_data_folder(
     Ok(())
 }
 
+#[tauri::command]
+fn get_spotify_secret(state: State<String>) -> Result<String, BackendError> {
+    let config = toml::from_str::<Config>(state.as_str())?;
+    Ok(config.spotify.secret)
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![move_files_to_data_folder])
+        .setup(|app| {
+            let main_window = app.get_window("main");
+            let file_read_result = tauri::api::file::read_string("./spotify_config.toml");
+            if let Ok(toml_string) = file_read_result {
+                app.manage(toml_string);
+            } else {
+                // Can't read the file (missing/permissions)
+                // Can't end with err because it just closes immediately 
+                tauri::api::dialog::message(main_window.as_ref(), "Warning", "Could not read the spotify_config.toml file, please make sure it exists and is readable. The program will not work correctly without it")
+            }
+            
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![move_files_to_data_folder, get_spotify_secret])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

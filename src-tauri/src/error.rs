@@ -6,7 +6,9 @@ pub enum BackendError {
     #[error("Could not get data dir")]
     CouldNotGetDataDir,
     #[error(transparent)]
-    SerdeError(#[from] serde_json::Error),
+    SerdeJsonError(#[from] serde_json::Error),
+    #[error(transparent)]
+    SerdeTomlError(#[from] toml::de::Error),
     #[error(transparent)]
     IoError(#[from] tauri::api::Error),
     #[error(transparent)]
