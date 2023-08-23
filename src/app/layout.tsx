@@ -23,8 +23,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <AppNavbar />
-          {children}
+          <div className='flex flex-col h-screen'>
+            <AppNavbar />
+            {children}
+          </div>
         </Providers>
       </body>
     </html>
