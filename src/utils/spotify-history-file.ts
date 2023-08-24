@@ -10,6 +10,7 @@ export type SpotifyHistoryEntry = {
   master_metadata_album_artist_name?: string;
   master_metadata_album_album_name?: string;
   spotify_track_uri?: string;
+  consecutive: number;
 };
 
 export type SpotifyHistoryFile = {

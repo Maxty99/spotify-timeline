@@ -6,17 +6,25 @@ mod serde_spotify;
 
 use std::{fs, path::PathBuf};
 
+use chrono::Utc;
 use error::BackendError;
 use serde::{Deserialize, Serialize};
-use serde_chrono::{deserialize_datetime, deserialize_milis, serialize_milis};
+use serde_chrono::{deserialize_datetime, serialize_datetime, deserialize_milis, serialize_milis};
 use serde_spotify::TrackURI;
 use tauri::{Manager, State};
+
+// Annoying thing I have todo becasue serde default
+// doesn't support literals
+fn return_one() -> u64 {
+    1
+}
 
 #[derive(Deserialize, Serialize)]
 struct SpotifyHistoryEntry {
     #[serde(rename(deserialize = "ts"))]
     #[serde(deserialize_with = "deserialize_datetime")]
-    timestamp: chrono::NaiveDate,
+    #[serde(serialize_with = "serialize_datetime")]
+    timestamp: chrono::DateTime<Utc>,
     username: String,
     platform: String,
     #[serde(deserialize_with = "deserialize_milis")]
@@ -29,6 +37,8 @@ struct SpotifyHistoryEntry {
     master_metadata_album_artist_name: Option<String>,
     master_metadata_album_album_name: Option<String>,
     spotify_track_uri: Option<TrackURI>,
+    #[serde(default = "return_one")]
+    consecutive: u64
 }
 
 #[derive(Serialize)]
@@ -77,6 +87,29 @@ fn get_spotify_secret(state: State<String>) -> Result<String, BackendError> {
     Ok(config.spotify.secret)
 }
 
+#[tauri::command]
+fn read_spotify_file(app_handle: tauri::AppHandle, name: String) -> Result<Vec<SpotifyHistoryEntry>, BackendError> {
+    let mut data_folder = app_handle
+        .path_resolver()
+        .app_data_dir()
+        .ok_or(BackendError::CouldNotGetDataDir)?;
+    data_folder.push(name);
+
+    let json_string = fs::read_to_string(data_folder)?;
+
+    let mut spotify_entries = serde_json::from_str::<Vec<SpotifyHistoryEntry>>(&json_string)?;
+    // Optimize consecutive duplicates in rust for speed
+    spotify_entries.dedup_by(|a, b| {
+        if a.master_metadata_track_name == b.master_metadata_track_name {
+            b.consecutive += a.consecutive;
+            true
+        } else {
+            false
+        }
+    });
+    Ok(spotify_entries)
+}
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
@@ -94,7 +127,7 @@ fn main() {
             
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![move_files_to_data_folder, get_spotify_secret])
+        .invoke_handler(tauri::generate_handler![move_files_to_data_folder, get_spotify_secret, read_spotify_file])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
