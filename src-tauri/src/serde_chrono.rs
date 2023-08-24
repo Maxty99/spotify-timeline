@@ -40,25 +40,6 @@ impl<'de> Visitor<'de> for U64Visitor {
     }
 }
 
-pub fn deserialize_datetime<'de, D>(deserializer: D) -> Result<chrono::DateTime<Utc>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let date_string = deserializer.deserialize_string(StringVisitor)?;
-    let date = Utc
-        .datetime_from_str(&date_string, "%Y-%m-%dT%H:%M:%SZ")
-        .map_err(Error::custom)?;
-    Ok(date)
-}
-
-pub fn serialize_datetime<S>(date: &chrono::DateTime<Utc>, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let date_format = date.format("%Y-%m-%dT%H:%M:%SZ");
-    serializer.serialize_str(date_format.to_string().as_ref())
-}
-
 pub fn deserialize_milis<'de, D>(deserializer: D) -> Result<chrono::Duration, D::Error>
 where
     D: Deserializer<'de>,

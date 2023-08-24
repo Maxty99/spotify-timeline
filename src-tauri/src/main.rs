@@ -6,11 +6,12 @@ mod serde_spotify;
 
 use std::{fs, path::PathBuf};
 
-use chrono::Utc;
 use error::BackendError;
+
 use serde::{Deserialize, Serialize};
-use serde_chrono::{deserialize_datetime, serialize_datetime, deserialize_milis, serialize_milis};
+use serde_chrono::{deserialize_milis, serialize_milis};
 use serde_spotify::TrackURI;
+
 use tauri::{Manager, State};
 
 // Annoying thing I have todo becasue serde default
@@ -22,9 +23,7 @@ fn return_one() -> u64 {
 #[derive(Deserialize, Serialize)]
 struct SpotifyHistoryEntry {
     #[serde(rename(deserialize = "ts"))]
-    #[serde(deserialize_with = "deserialize_datetime")]
-    #[serde(serialize_with = "serialize_datetime")]
-    timestamp: chrono::DateTime<Utc>,
+    timestamp: String,
     username: String,
     platform: String,
     #[serde(deserialize_with = "deserialize_milis")]
