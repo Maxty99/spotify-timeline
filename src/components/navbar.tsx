@@ -24,11 +24,6 @@ export default function AppNavbar() {
                         Home
                     </Link>
                 </NavbarItem>
-                <NavbarItem isActive={pathname == '/timeline'}>
-                    <Link href="/timeline" as={NextLink} isBlock>
-                        Timeline
-                    </Link>
-                </NavbarItem>
                 <NavbarItem isActive={pathname == '/calendar'}>
                     <Link href="/calendar" as={NextLink} isBlock>
                         Calendar

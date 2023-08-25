@@ -7,7 +7,7 @@ use std::fmt::{self, Display, Formatter};
 /// This is made into an explicit type because I forsee a
 /// lot of times where I might need to access just the id  
 /// portion of the [TrackURI]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct TrackURI(pub String);
 
 impl Display for TrackURI {

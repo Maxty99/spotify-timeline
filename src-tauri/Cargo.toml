@@ -26,6 +26,7 @@ tauri = { version = "1.4.0", features = [
 chrono = { version = "0.4.26", features = ["serde"] }
 thiserror = "1.0.44"
 toml = "0.7.6"
+cached = "0.44.0"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.

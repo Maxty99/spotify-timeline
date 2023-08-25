@@ -3,48 +3,16 @@
 mod error;
 mod serde_chrono;
 mod serde_spotify;
+mod spotify_history_file;
 
-use std::{fs, path::PathBuf};
+use std::{fs, sync::Mutex};
 
 use error::BackendError;
 
-use serde::{Deserialize, Serialize};
-use serde_chrono::{deserialize_milis, serialize_milis};
-use serde_spotify::TrackURI;
+use serde::Deserialize;
 
+use spotify_history_file::{SpotifyHistoryFile, SpotifyHistoryEntry};
 use tauri::{Manager, State};
-
-// Annoying thing I have todo becasue serde default
-// doesn't support literals
-fn return_one() -> u64 {
-    1
-}
-
-#[derive(Deserialize, Serialize)]
-struct SpotifyHistoryEntry {
-    #[serde(rename(deserialize = "ts"))]
-    timestamp: String,
-    username: String,
-    platform: String,
-    #[serde(deserialize_with = "deserialize_milis")]
-    #[serde(serialize_with = "serialize_milis")]
-    ms_played: chrono::Duration,
-    conn_country: String,
-    ip_addr_decrypted: String,
-    user_agent_decrypted: String,
-    master_metadata_track_name: Option<String>,
-    master_metadata_album_artist_name: Option<String>,
-    master_metadata_album_album_name: Option<String>,
-    spotify_track_uri: Option<TrackURI>,
-    #[serde(default = "return_one")]
-    consecutive: u64
-}
-
-#[derive(Serialize)]
-struct SpotifyHistoryFile {
-    path: PathBuf,
-    data: Vec<SpotifyHistoryEntry>,
-}
 
 #[derive(Deserialize)]
 struct Config {
@@ -65,7 +33,7 @@ fn move_files_to_data_folder(
         .path_resolver()
         .app_data_dir()
         .ok_or(BackendError::CouldNotGetDataDir)?;
-    println!("{paths:?}");
+
     for file_path in paths.iter() {
         let file_name = file_path
             .split(|chr| -> bool { matches!(chr, '\\' | '/') })
@@ -74,7 +42,7 @@ fn move_files_to_data_folder(
             .to_owned();
         let mut dest = data_folder.clone();
         dest.push(file_name);
-        println!("{file_path:?} -> {dest:?}");
+
         fs::copy(file_path, dest)?;
     }
     Ok(())
@@ -86,8 +54,34 @@ fn get_spotify_secret(state: State<String>) -> Result<String, BackendError> {
     Ok(config.spotify.secret)
 }
 
+
+
 #[tauri::command]
-fn read_spotify_file(app_handle: tauri::AppHandle, name: String) -> Result<Vec<SpotifyHistoryEntry>, BackendError> {
+fn read_spotify_file_page(
+    app_handle: tauri::AppHandle, 
+    state: State<Mutex<SpotifyHistoryFile>>, 
+    filename: String,
+    page: usize) -> Result<Vec<SpotifyHistoryEntry>, BackendError> {
+
+    let mut history_file = state.lock()
+        .expect("If something panicked with this, chances are this is going to panic too");
+    
+    if history_file.filename == filename {
+        let vec = history_file.get_page(page).to_vec();
+
+        Ok(vec)
+    } else {
+        // refresh state to the new selected file
+        let new_file_data = read_spotify_file(&app_handle, &filename)?;
+        history_file.filename = filename;
+        history_file.data = new_file_data;
+        let vec = history_file.get_page(page).to_vec();
+
+        Ok(vec)
+    }
+}
+
+fn read_spotify_file(app_handle: &tauri::AppHandle, name: &String) -> Result<Vec<SpotifyHistoryEntry>, BackendError> {
     let mut data_folder = app_handle
         .path_resolver()
         .app_data_dir()
@@ -109,6 +103,8 @@ fn read_spotify_file(app_handle: tauri::AppHandle, name: String) -> Result<Vec<S
     Ok(spotify_entries)
 }
 
+
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
@@ -126,7 +122,13 @@ fn main() {
             
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![move_files_to_data_folder, get_spotify_secret, read_spotify_file])
+        .manage::<Mutex<SpotifyHistoryFile>>(
+            Mutex::new(SpotifyHistoryFile { 
+                filename: String::from(""), 
+                data: vec![] 
+            })
+        )
+        .invoke_handler(tauri::generate_handler![move_files_to_data_folder, get_spotify_secret, read_spotify_file_page])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
