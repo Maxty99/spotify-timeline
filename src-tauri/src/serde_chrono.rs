@@ -1,6 +1,5 @@
 use std::fmt;
 
-use chrono::{TimeZone, Utc};
 use serde::{
     de::{Error, Visitor},
     Deserializer, Serializer,
