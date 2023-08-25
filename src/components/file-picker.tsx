@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip } from "@nextui-org/react";
 import Folder from "@/components/icons/folder";
 import useSpotifyFile from "@/hooks/spotify-file-hook";
 import { useEffect, useState } from "react";
@@ -73,7 +73,10 @@ export default function FilePicker() {
                     })}
                 </DropdownMenu>
             </Dropdown>
-            <Button onClick={promptForFile} isIconOnly startContent={<Folder />}></Button>
+            <Tooltip content="Add files">
+                <Button onClick={promptForFile} isIconOnly startContent={<Folder />}></Button>
+            </Tooltip>
+
         </ButtonGroup >
     )
 }
