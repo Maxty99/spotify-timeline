@@ -24,11 +24,6 @@ export default function AppNavbar() {
                         Home
                     </Link>
                 </NavbarItem>
-                <NavbarItem isActive={pathname == '/calendar'}>
-                    <Link href="/calendar" as={NextLink} isBlock>
-                        Calendar
-                    </Link>
-                </NavbarItem>
                 <NavbarItem isActive={pathname == '/advanced'}>
                     <Link href="/advanced" as={NextLink} isBlock>
                         Advanced View
