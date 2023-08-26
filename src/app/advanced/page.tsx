@@ -6,35 +6,42 @@ import { Pagination, Spinner, Table, TableBody, TableCell, TableColumn, TableHea
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import { useAsyncList } from "@react-stately/data";
 import { invoke } from "@tauri-apps/api/tauri";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { createRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export default function Timeline() {
     let spotify = useSpotifyFile();
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [list, setlist] = useState<SpotifyHistoryEntry[]>([]);
 
     useEffect(() => {
+        console.log("running get total pages...")
         invoke<number>('get_number_of_spotify_file_pages')
             .then((number_of_pages) => {
+                console.log(`set total pages to ${number_of_pages}`)
                 setTotalPages(number_of_pages);
+                console.log("set page to 1")
                 setPage(1);
             })
             .catch(console.log);
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [spotify])
+    }, [spotify.context_storage])
 
     useEffect(() => {
-        invoke<SpotifyHistoryEntry[]>('read_spotify_file_page', { page })
-            .then((page_of_entries) => {
-                setlist(page_of_entries);
-                setIsLoading(false);
-            })
-            .catch(console.log);
-    }, [page])
+        if (page) {
+            console.log(`getting page ${page}...`)
+            invoke<SpotifyHistoryEntry[]>('read_spotify_file_page', { page })
+                .then((page_of_entries) => {
+                    console.log("set list")
+                    setlist(page_of_entries);
+                    console.log("set loading to false")
+                    setIsLoading(false);
+                })
+                .catch(console.log);
+        }
+    }, [page, spotify.context_storage])
 
     const onPaginationChange = useCallback(
         (page: number) => {
@@ -62,6 +69,7 @@ export default function Timeline() {
                         />
                     </div>
                 ) : null}
+            bottomContentPlacement="outside"
             classNames={{
                 base: "overflow-auto",
                 table: "min-h-[400px]",

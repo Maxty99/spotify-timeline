@@ -18,17 +18,18 @@ export const SpotifyFileContext = createContext<Context>({
 export default function SpotifyFileProvider({ children }: { children: React.ReactNode }) {
     let [context_storage, set_context_storage] = useState<ContextStorage>("")
 
-    let memo = useMemo(() => {
-        return {
-            context_storage, callback: async (new_filename: string) => {
-                invoke('update_selected_file', { filename: new_filename })
-                    .then(() => set_context_storage(new_filename))
-            }
+    let provided_value: Context = {
+        context_storage,
+        callback: async (new_filename: string) => {
+            invoke('update_selected_file', { filename: new_filename })
+                .then(() => set_context_storage(new_filename))
+                .catch(console.log)
         }
-    }, [context_storage, set_context_storage])
+    }
+
 
     return (
-        <SpotifyFileContext.Provider value={memo}>
+        <SpotifyFileContext.Provider value={provided_value} >
             {children}
         </ SpotifyFileContext.Provider >
     )
