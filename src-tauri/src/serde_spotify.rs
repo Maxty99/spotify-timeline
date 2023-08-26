@@ -47,7 +47,7 @@ impl Serialize for TrackURI {
     where
         S: Serializer,
     {
-        serializer.serialize_str(&format!("{}", self))
+        serializer.serialize_str(&format!("{}", self.0))
     }
 }
 impl<'de> Deserialize<'de> for TrackURI {

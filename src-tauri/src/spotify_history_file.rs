@@ -7,10 +7,9 @@ const ENTRIES_PER_PAGE: usize = 50;
 
 // Annoying thing I have todo becasue serde default
 // doesn't support literals
-fn return_one() -> u64 {
+const fn return_one() -> u64 {
     1
 }
-
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct SpotifyHistoryEntry {
     #[serde(rename(deserialize = "ts"))]
@@ -22,7 +21,7 @@ pub struct SpotifyHistoryEntry {
     pub ms_played: chrono::Duration,
     pub conn_country: String,
     pub ip_addr_decrypted: String,
-    pub user_agent_decrypted: String,
+    pub user_agent_decrypted: Option<String>,
     pub master_metadata_track_name: Option<String>,
     pub master_metadata_album_artist_name: Option<String>,
     pub master_metadata_album_album_name: Option<String>,
@@ -53,6 +52,15 @@ impl SpotifyHistoryFile {
             &self.data[start_idx..]
         } else {
             &[]
+        }
+    }
+
+    pub fn get_number_of_pages(&self) -> usize {
+        let length = self.data.len();
+        if length % ENTRIES_PER_PAGE == 0 {
+            length / ENTRIES_PER_PAGE
+        } else {
+            (length / ENTRIES_PER_PAGE) + 1
         }
     }
 }
