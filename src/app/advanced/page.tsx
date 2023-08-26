@@ -55,6 +55,7 @@ export default function Advanced() {
                         <Pagination
                             showControls
                             showShadow
+                            siblings={3}
                             color="primary"
                             page={page}
                             total={totalPages}
