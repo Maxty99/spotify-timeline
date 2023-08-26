@@ -73,7 +73,7 @@ export async function get_album_art_url(entry: SpotifyHistoryEntry): Promise<str
         let params = new URLSearchParams({
             url: "spotify:track:" + entry.spotify_track_uri
         });
-        let resp = await fetch("http://open.spotify.com/oembed?" + params, {
+        let resp = await fetch("https://open.spotify.com/oembed?" + params, {
             method: "GET",
         });
         let json = await resp.json()
