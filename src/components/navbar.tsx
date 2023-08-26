@@ -13,7 +13,7 @@ export default function AppNavbar() {
     const pathname = usePathname();
 
     return (
-        <Navbar isBordered maxWidth="full" className="flex-none">
+        <Navbar isBordered maxWidth="full" className="flex-none" position="static">
             <NavbarContent justify="start">
                 <FilePicker />
             </NavbarContent>

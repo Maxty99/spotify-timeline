@@ -6,7 +6,7 @@ import { Pagination, Spinner, Table, TableBody, TableCell, TableColumn, TableHea
 import { invoke } from "@tauri-apps/api/tauri";
 import { useCallback, useEffect, useState } from "react";
 
-export default function Timeline() {
+export default function Advanced() {
     let spotify = useSpotifyFile();
 
     const [page, setPage] = useState<number>(1);
@@ -63,15 +63,11 @@ export default function Timeline() {
                     </div>
                 ) : null}
             bottomContentPlacement="outside"
-            classNames={{
-                base: "overflow-auto",
-                table: "min-h-[400px]",
-            }}
         >
             <TableHeader>
-                <TableColumn key="song">Song</TableColumn>
-                <TableColumn key="info">Info</TableColumn>
-                <TableColumn key="link">Spotify URL</TableColumn>
+                <TableColumn width={"50%"} key="song">Song</TableColumn>
+                <TableColumn width={"40%"} key="info">Info</TableColumn>
+                <TableColumn width={"10%"} key="link">Spotify URL</TableColumn>
             </TableHeader>
             <TableBody
                 isLoading={isLoading}

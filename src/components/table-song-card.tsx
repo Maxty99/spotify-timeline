@@ -2,40 +2,50 @@
 
 
 import { SpotifyHistoryEntry, get_album_art_url } from "@/utils/spotify-history-file";
-import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
+import { Badge, Card, CardBody, Image, Tooltip } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
-//TODO: Redisign more like: https://nextui.org/docs/components/card#blurred-card
 export default function TableSongCard(props: { spotify_entry: SpotifyHistoryEntry }) {
+    const entry = props.spotify_entry;
+
     let [thumbnail, setThumbnail] = useState<string | undefined>(undefined);
     let [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        get_album_art_url(props.spotify_entry)
+        get_album_art_url(entry)
             .then((url) => { setThumbnail(url) })
             .catch(console.log)
             .finally(() => setLoading(false))
     })
 
-
-    return (<Card
-        isFooterBlurred
-        radius="lg"
-        className="border-none"
-    >
-        <Image
-            alt="Album Art"
-            className="object-cover"
-            isLoading={loading}
-            height={200}
-            src={thumbnail}
-            width={200}
-        />
-        <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-            <p className="text-tiny text-white/80">Available soon.</p>
-            <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg" size="sm">
-                Notify me
-            </Button>
-        </CardFooter>
-    </Card>)
+    return (
+        <Card
+            isFooterBlurred
+            radius="lg"
+            className="border-none max-h-[200px]"
+        >
+            <div className="flex felx-row">
+                <Image
+                    alt="Album Art"
+                    className="object-cover"
+                    isLoading={loading}
+                    loading="lazy"
+                    src={thumbnail ?? "fallback_album_art.svg"}
+                    width={200}
+                    height={200}
+                />
+                <CardBody>
+                    <div className="grid grid-cols-2 min-w-0">
+                        <Tooltip delay={2000} content={entry.master_metadata_track_name}>
+                            <p className="truncate max-w-full justify-self-start font-bold sm:md:text-sm md:text-base lg:text-lg">{entry.master_metadata_track_name ?? "Not Found"}</p>
+                        </Tooltip>
+                        <p className="truncate max-w-full justify-self-end sm:md:text-xs md:text-xs lg:text-sm">{entry.master_metadata_album_artist_name ?? "Not Found"} </p>
+                        <Tooltip delay={2000} content={entry.master_metadata_album_album_name} placement="bottom">
+                            <p className="truncate max-w-full justify-self-start sm:md:text-xs md:text-xs lg:text-sm">{entry.master_metadata_album_album_name ?? "Not Found"} </p>
+                        </Tooltip>
+                    </div>
+                </CardBody>
+            </div >
+        </Card >
+    )
 }

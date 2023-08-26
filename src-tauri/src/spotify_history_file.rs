@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::serde_chrono::{deserialize_milis, serialize_milis};
 use crate::serde_spotify::TrackURI;
 
-const ENTRIES_PER_PAGE: usize = 50;
+const ENTRIES_PER_PAGE: usize = 4;
 
 // Annoying thing I have todo becasue serde default
 // doesn't support literals
