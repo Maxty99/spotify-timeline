@@ -1,4 +1,0 @@
-# Rename this file to spotify_config.toml and replace the secret with your actual secret
-[spotify]
-client_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-secret = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"

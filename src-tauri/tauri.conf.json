@@ -51,9 +51,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [
-        "spotify_config_example.toml"
-      ],
+      "resources": [],
       "shortDescription": "",
       "targets": "all",
       "windows": {

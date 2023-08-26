@@ -9,21 +9,8 @@ use std::{fs, sync::Mutex};
 
 use error::BackendError;
 
-use serde::{Deserialize, Serialize};
-
-use spotify_history_file::{SpotifyHistoryFile, SpotifyHistoryEntry};
-use tauri::{Manager, State};
-
-#[derive(Deserialize)]
-struct Config {
-    spotify: Spotify
-}
-
-#[derive(Deserialize, Serialize)]
-struct Spotify {
-    client_id: String,
-    secret: String
-}
+use spotify_history_file::{SpotifyHistoryEntry, SpotifyHistoryFile};
+use tauri::State;
 
 #[tauri::command]
 fn move_files_to_data_folder(
@@ -50,40 +37,33 @@ fn move_files_to_data_folder(
 }
 
 #[tauri::command]
-fn get_spotify_secret_and_id(state: State<String>) -> Result<Spotify, BackendError> {
-    let config = toml::from_str::<Config>(state.as_str())?;
-    Ok(config.spotify)
-}
-
-#[tauri::command]
-fn update_selected_file( 
-    app_handle: tauri::AppHandle, 
-    state: State<Mutex<SpotifyHistoryFile>>, 
-    filename: String ) -> Result<(), BackendError> {
-   
-    let mut history_file = state.lock()
+fn update_selected_file(
+    app_handle: tauri::AppHandle,
+    state: State<Mutex<SpotifyHistoryFile>>,
+    filename: String,
+) -> Result<(), BackendError> {
+    let mut history_file = state
+        .lock()
         .expect("If something panicked with this, chances are this is going to panic too");
-    
+
     if history_file.filename != filename {
-        
         // refresh state to the new selected file
         let new_file_data = read_spotify_file(&app_handle, &filename)?;
         history_file.filename = filename;
         history_file.data = new_file_data;
-
     }
     Ok(())
 }
 
-
 #[tauri::command]
 fn read_spotify_file_page(
-    state: State<Mutex<SpotifyHistoryFile>>, 
-    page: usize) -> Vec<SpotifyHistoryEntry> {
-
-    let history_file = state.lock()
+    state: State<Mutex<SpotifyHistoryFile>>,
+    page: usize,
+) -> Vec<SpotifyHistoryEntry> {
+    let history_file = state
+        .lock()
         .expect("If something panicked with this, chances are this is going to panic too");
-    
+
     let vec = history_file.get_page(page).to_vec();
 
     vec
@@ -91,18 +71,19 @@ fn read_spotify_file_page(
 
 #[tauri::command]
 fn get_number_of_spotify_file_pages(state: State<Mutex<SpotifyHistoryFile>>) -> usize {
-
-    let history_file = state.lock()
+    let history_file = state
+        .lock()
         .expect("If something panicked with this, chances are this is going to panic too");
-    
+
     let pages = history_file.get_number_of_pages();
 
     pages
 }
 
-
-
-fn read_spotify_file(app_handle: &tauri::AppHandle, name: &String) -> Result<Vec<SpotifyHistoryEntry>, BackendError> {
+fn read_spotify_file(
+    app_handle: &tauri::AppHandle,
+    name: &String,
+) -> Result<Vec<SpotifyHistoryEntry>, BackendError> {
     let mut data_folder = app_handle
         .path_resolver()
         .app_data_dir()
@@ -124,32 +105,18 @@ fn read_spotify_file(app_handle: &tauri::AppHandle, name: &String) -> Result<Vec
     Ok(spotify_entries)
 }
 
-
-
 fn main() {
     tauri::Builder::default()
-        .setup(|app| {
-            let main_window = app.get_window("main");
-            let file_read_result = tauri::api::file::read_string("./spotify_config.toml");
-            if let Ok(toml_string) = file_read_result {
-                app.manage(toml_string);
-            } else {
-                // Add an empty string to state otherwise app crashes on launch
-                app.manage(String::from(""));
-                // Can't read the file (missing/permissions)
-                // Can't end with err because it just closes immediately 
-                tauri::api::dialog::message(main_window.as_ref(), "Warning", "Could not read the spotify_config.toml file, please make sure it exists and is readable. The program will not work correctly without it")
-            }
-            
-            Ok(())
-        })
-        .manage::<Mutex<SpotifyHistoryFile>>(
-            Mutex::new(SpotifyHistoryFile { 
-                filename: String::from(""), 
-                data: vec![] 
-            })
-        )
-        .invoke_handler(tauri::generate_handler![move_files_to_data_folder, get_spotify_secret_and_id, read_spotify_file_page, update_selected_file, get_number_of_spotify_file_pages])
+        .manage::<Mutex<SpotifyHistoryFile>>(Mutex::new(SpotifyHistoryFile {
+            filename: String::from(""),
+            data: vec![],
+        }))
+        .invoke_handler(tauri::generate_handler![
+            move_files_to_data_folder,
+            read_spotify_file_page,
+            update_selected_file,
+            get_number_of_spotify_file_pages
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
