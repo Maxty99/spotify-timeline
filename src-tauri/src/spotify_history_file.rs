@@ -1,6 +1,9 @@
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
 
-use crate::serde_chrono::{deserialize_milis, serialize_milis};
+use crate::serde_chrono::{
+    deserialize_datetime, deserialize_milis, serialize_datetime, serialize_milis,
+};
 use crate::serde_spotify::TrackURI;
 
 const ENTRIES_PER_PAGE: usize = 4;
@@ -13,7 +16,9 @@ const fn return_one() -> u64 {
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct SpotifyHistoryEntry {
     #[serde(rename(deserialize = "ts"))]
-    pub timestamp: String,
+    #[serde(deserialize_with = "deserialize_datetime")]
+    #[serde(serialize_with = "serialize_datetime")]
+    pub timestamp: chrono::DateTime<Utc>,
     pub username: String,
     pub platform: String,
     #[serde(deserialize_with = "deserialize_milis")]
@@ -30,7 +35,7 @@ pub struct SpotifyHistoryEntry {
     pub consecutive: u64,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Clone)]
 pub struct SpotifyHistoryFile {
     pub filename: String,
     pub data: Vec<SpotifyHistoryEntry>,
