@@ -2,9 +2,9 @@
 
 import useSpotifyFile from "@/hooks/spotify-file-hook"
 import { SpotifyHistoryEntry, renderTableCell } from "@/utils/spotify-history-file";
-import { Pagination, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
+import { Input, Pagination, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import { invoke } from "@tauri-apps/api/tauri";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function Advanced() {
     let spotify = useSpotifyFile();
@@ -13,6 +13,7 @@ export default function Advanced() {
     const [totalPages, setTotalPages] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [list, setlist] = useState<SpotifyHistoryEntry[]>([]);
+    const [validPageSelected, setValidPageSelected] = useState(true);
 
     useEffect(() => {
 
@@ -43,6 +44,45 @@ export default function Advanced() {
         }, []
     );
 
+    const onJumpToPageChange = useCallback(
+        (page_string: string) => {
+            let new_page = parseInt(page_string);
+            if (new_page == page) return;
+            if (new_page < totalPages && new_page > 0) {
+                setIsLoading(true);
+                setValidPageSelected(true);
+                setPage(new_page);
+            } else {
+                setValidPageSelected(false)
+            }
+        }, [page, totalPages]
+    );
+
+    let bottomContent = useMemo(() => {
+        return (<div className="flex items-center">
+            <Pagination
+                showControls
+                showShadow
+                siblings={3}
+                color="primary"
+                page={page}
+                total={totalPages}
+                onChange={onPaginationChange}
+            />
+
+            <Input
+                className="max-w-[200px] px-5"
+                type="number"
+                label="Jump to page"
+                placeholder={"0"}
+                color={validPageSelected ? "default" : "danger"}
+                onValueChange={onJumpToPageChange}
+                labelPlacement="inside"
+            />
+        </div>)
+
+    }, [page, totalPages, onPaginationChange, validPageSelected, onJumpToPageChange])
+
     return (
         <Table
             isHeaderSticky
@@ -52,18 +92,10 @@ export default function Advanced() {
             bottomContent={
                 totalPages > 0 ? (
                     <div className="flex w-full justify-center">
-                        <Pagination
-                            showControls
-                            showShadow
-                            siblings={3}
-                            color="primary"
-                            page={page}
-                            total={totalPages}
-                            onChange={onPaginationChange}
-                        />
+                        {bottomContent}
                     </div>
                 ) : null}
-            bottomContentPlacement="outside"
+            bottomContentPlacement="inside"
         >
             <TableHeader>
                 <TableColumn width={"50%"} key="song">Song</TableColumn>
