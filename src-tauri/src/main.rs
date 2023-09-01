@@ -68,6 +68,7 @@ fn update_filters(state: State<Mutex<FilterSort>>, filters: FilterSortOptions) {
     let mut filter_sort = state
         .lock()
         .expect("If something panicked with this, chances are this is going to panic too");
+
     filter_sort.update_filters(filters);
 }
 

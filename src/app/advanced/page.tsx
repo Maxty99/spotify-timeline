@@ -5,9 +5,13 @@ import { SpotifyHistoryEntry, renderTableCell } from "@/utils/spotify-history-fi
 import { Input, Pagination, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Filters from "@/components/filters";
+import useFilters from "@/hooks/filters-hook";
 
 export default function Advanced() {
     let spotify = useSpotifyFile();
+    let filters = useFilters();
+
 
     const [page, setPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -16,7 +20,6 @@ export default function Advanced() {
     const [validPageSelected, setValidPageSelected] = useState(true);
 
     useEffect(() => {
-
         invoke<number>('get_number_of_spotify_file_pages')
             .then((number_of_pages) => {
                 setTotalPages(number_of_pages);
@@ -24,7 +27,7 @@ export default function Advanced() {
             })
             .catch(console.log);
 
-    }, [spotify.context_storage])
+    }, [spotify.state, filters.phantomData])
 
     useEffect(() => {
         if (page) {
@@ -35,7 +38,7 @@ export default function Advanced() {
                 })
                 .catch(console.log);
         }
-    }, [page, spotify.context_storage])
+    }, [page, spotify.state, filters.phantomData])
 
     const onPaginationChange = useCallback(
         (page: number) => {
@@ -87,6 +90,7 @@ export default function Advanced() {
         <Table
             isHeaderSticky
             removeWrapper
+            className="p-2"
             selectionMode="none"
             aria-label="Spotify history table"
             bottomContent={
@@ -96,6 +100,10 @@ export default function Advanced() {
                     </div>
                 ) : null}
             bottomContentPlacement="inside"
+            topContent={
+                <Filters />
+            }
+            topContentPlacement="inside"
         >
             <TableHeader>
                 <TableColumn width={"50%"} key="song">Song</TableColumn>

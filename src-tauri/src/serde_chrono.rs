@@ -46,7 +46,7 @@ where
 {
     let date_string = deserializer.deserialize_string(StringVisitor)?;
     let date = Utc
-        .datetime_from_str(&date_string, "%Y-%m-%dT%H:%M:%SZ")
+        .datetime_from_str(&date_string, "%+") // %+ is the ISO format
         .map_err(Error::custom)?;
     Ok(date)
 }
@@ -55,7 +55,7 @@ pub fn serialize_datetime<S>(date: &chrono::DateTime<Utc>, serializer: S) -> Res
 where
     S: Serializer,
 {
-    let date_format = date.format("%Y-%m-%dT%H:%M:%SZ");
+    let date_format = date.format("%+"); // %+ is the ISO format
     serializer.serialize_str(date_format.to_string().as_ref())
 }
 

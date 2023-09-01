@@ -35,7 +35,14 @@ export default function FilePicker() {
                 // in case user selects one it can be safely passed to rust
                 // since rust needs it to be a Vec
                 let file_paths_flat_arr = [file_paths].flat()
-                invoke('move_files_to_data_folder', { paths: file_paths_flat_arr }).catch(console.log)
+                invoke('move_files_to_data_folder', { paths: file_paths_flat_arr })
+                    // Really odd chaining but kind of forced to do this to update the dropdown 
+                    // with the newly added file(s)
+                    .then(() => readDir('', { dir: BaseDirectory.AppData, recursive: false })
+                        .then((read_files) => {
+                            setFiles(read_files);
+                        }).catch(console.log))
+                    .catch(console.log)
             }
         })
 
@@ -58,14 +65,14 @@ export default function FilePicker() {
                     // This fixes a random checkmark appearing if you select and close fast
                     selectionMode="none"
                     onAction={(key) => {
-                        spotify.callback(key.toString());
+                        spotify.updateFileName(key.toString());
                     }}
                 >
                     {files.filter((file_entry) => {
                         return file_entry.name != undefined
                     }).map((file_entry) => {
                         return <DropdownItem
-                            endContent={file_entry.name == spotify.context_storage ? "✓" : undefined}
+                            endContent={file_entry.name == spotify.state ? "✓" : undefined}
                             key={file_entry.name}
                         >
                             {file_entry.name}

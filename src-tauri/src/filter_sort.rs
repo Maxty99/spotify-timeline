@@ -1,26 +1,26 @@
 use std::cmp::Reverse;
 
 use chrono::{DateTime, Utc};
+
 use serde::Deserialize;
 
+use crate::serde_chrono::deserialize_datetime;
 use crate::spotify_history_file::SpotifyHistoryFile;
 
 #[derive(Clone, Copy, PartialEq, Deserialize)]
-pub enum SortingOrder {
-    Ascending,
-    Descending,
-}
-
-#[derive(Clone, Copy, PartialEq, Deserialize)]
 pub enum SortingCategory {
-    Name(SortingOrder),
-    Date(SortingOrder),
+    NameAscending,
+    NameDescending,
+    DateAscending,
+    DateDescending,
     NoSorting,
 }
 
 #[derive(PartialEq, Deserialize)]
 pub struct DateRange {
+    #[serde(deserialize_with = "deserialize_datetime")]
     start: DateTime<Utc>,
+    #[serde(deserialize_with = "deserialize_datetime")]
     end: DateTime<Utc>,
 }
 
@@ -61,6 +61,15 @@ impl FilterSort {
         }
     }
 
+    fn reset_filters(&mut self) {
+        self.filter_sort_options = FilterSortOptions {
+            date_range: None,
+            filter_nulls: false,
+            name_query: "".to_owned(),
+            sorting: SortingCategory::NoSorting,
+        };
+    }
+
     fn apply_filters(&mut self) {
         let mut data_to_filter_sort = self.original_data.data.clone();
         if let Some(date_range) = &self.filter_sort_options.date_range {
@@ -95,20 +104,19 @@ impl FilterSort {
         }
 
         match self.filter_sort_options.sorting {
-            SortingCategory::Name(order) => match order {
-                SortingOrder::Ascending => data_to_filter_sort
-                    .sort_by_cached_key(|elem| elem.master_metadata_track_name.clone()),
-                SortingOrder::Descending => data_to_filter_sort
-                    .sort_by_cached_key(|elem| Reverse(elem.master_metadata_track_name.clone())),
-            },
-            SortingCategory::Date(order) => match order {
-                SortingOrder::Ascending => data_to_filter_sort.sort_by_key(|elem| elem.timestamp),
-                SortingOrder::Descending => {
-                    data_to_filter_sort.sort_by_key(|elem| Reverse(elem.timestamp))
-                }
-            },
+            SortingCategory::NameAscending => data_to_filter_sort
+                .sort_by_cached_key(|elem| elem.master_metadata_track_name.clone()),
+            SortingCategory::NameDescending => data_to_filter_sort
+                .sort_by_cached_key(|elem| Reverse(elem.master_metadata_track_name.clone())),
+            SortingCategory::DateAscending => {
+                data_to_filter_sort.sort_by_key(|elem| elem.timestamp)
+            }
+            SortingCategory::DateDescending => {
+                data_to_filter_sort.sort_by_key(|elem| Reverse(elem.timestamp))
+            }
             SortingCategory::NoSorting => {}
-        }
+        };
+
         self.sorted_cache.data = data_to_filter_sort;
     }
 
@@ -117,7 +125,8 @@ impl FilterSort {
     }
 
     pub fn change_file(&mut self, new_file: SpotifyHistoryFile) {
-        self.original_data = new_file;
-        self.apply_filters();
+        self.original_data = new_file.clone();
+        self.sorted_cache = new_file;
+        self.reset_filters()
     }
 }
