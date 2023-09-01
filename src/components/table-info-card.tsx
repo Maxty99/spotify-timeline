@@ -19,7 +19,7 @@ export default function TableInfoCard(props: { spotify_entry: SpotifyHistoryEntr
             <div className="grid grid-cols-2 gap-6 place-content-around">
                 <div className="flex flex-col">
                     <p className="font-bold sm:md:text-sm md:text-base lg:text-lg">Listened on</p>
-                    <p className="sm:md:text-xs md:text-sm lg:text-base">{date_listened.toUTCString()}</p>
+                    <p className="sm:md:text-xs md:text-sm lg:text-base">{date_listened.toLocaleString()}</p>
                 </div>
                 <div className="flex flex-col">
                     <p className="font-bold sm:md:text-sm md:text-base lg:text-lg">Platform</p>
@@ -33,13 +33,15 @@ export default function TableInfoCard(props: { spotify_entry: SpotifyHistoryEntr
                 </div>
                 <div className="flex flex-col">
                     <p className="font-bold sm:md:text-sm md:text-base lg:text-lg">Listened from</p>
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-row gap-2 items-center">
                         <p className="sm:md:text-xs md:text-sm lg:text-base">{entry.conn_country}</p>
                         <Image
-                            width={20}
+                            width={30}
+                            height={20}
                             alt="Flag image"
                             radius="sm"
                             src={`https://flagcdn.com/${entry.conn_country.toLowerCase()}.svg`}
+                            fallbackSrc={"fallback_flag.svg"}
                         />
                     </div>
                 </div>
