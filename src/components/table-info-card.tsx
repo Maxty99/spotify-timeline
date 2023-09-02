@@ -12,7 +12,7 @@ export default function TableInfoCard(props: { spotify_entry: SpotifyHistoryEntr
 
 
     return (<Card
-        className="border-none"
+        className="border-none w-full"
         shadow="sm"
     >
         <CardBody>

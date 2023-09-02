@@ -22,7 +22,7 @@ export default function TableSongCard(props: { spotify_entry: SpotifyHistoryEntr
         <Card
             isFooterBlurred
             radius="lg"
-            className="border-none max-h-[200px]"
+            className="border-none max-h-[200px] w-full"
         >
             <div className="flex felx-row">
                 <Image

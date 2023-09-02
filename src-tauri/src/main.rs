@@ -11,6 +11,7 @@ use std::{fs, sync::Mutex};
 use error::BackendError;
 
 use filter_sort::{FilterSort, FilterSortOptions};
+use rand::{seq::SliceRandom, thread_rng};
 use spotify_history_file::{SpotifyHistoryEntry, SpotifyHistoryFile};
 use tauri::State;
 
@@ -101,6 +102,17 @@ fn get_number_of_spotify_file_pages(state: State<Mutex<FilterSort>>) -> usize {
     pages
 }
 
+#[tauri::command]
+fn get_random_entry(state: State<Mutex<FilterSort>>) -> Option<SpotifyHistoryEntry> {
+    let filter_sort = state
+        .lock()
+        .expect("If something panicked with this, chances are this is going to panic too");
+
+    let history_file = filter_sort.access_data();
+
+    history_file.data.choose(&mut thread_rng()).cloned()
+}
+
 fn read_spotify_file(
     app_handle: &tauri::AppHandle,
     name: &String,
@@ -137,7 +149,8 @@ fn main() {
             read_spotify_file_page,
             update_selected_file,
             get_number_of_spotify_file_pages,
-            update_filters
+            update_filters,
+            get_random_entry
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

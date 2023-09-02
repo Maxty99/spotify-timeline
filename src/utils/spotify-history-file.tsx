@@ -1,3 +1,4 @@
+import SpotifyLink from "@/components/spotify-link";
 import TableInfoCard from "@/components/table-info-card";
 import TableSongCard from "@/components/table-song-card";
 import { Link } from "@nextui-org/react";
@@ -31,23 +32,7 @@ export function renderTableCell(entry: SpotifyHistoryEntry, columnKey: React.Key
         case "info":
             return (<TableInfoCard spotify_entry={entry} />)
         case "link":
-            if (entry.spotify_track_uri) {
-                return (<Link
-                    isExternal
-                    href={`https://open.spotify.com/track/${entry.spotify_track_uri}`}
-                    showAnchorIcon
-                >
-                    Spotify Link
-                </Link>)
-            } else {
-                return (<Link
-                    isExternal
-                    isDisabled
-                    showAnchorIcon
-                >
-                    No URI provided
-                </Link>)
-            }
+            return <SpotifyLink spotify_entry={entry} />
     }
 }
 

@@ -29,6 +29,11 @@ export default function AppNavbar() {
                         Advanced View
                     </Link>
                 </NavbarItem>
+                <NavbarItem isActive={pathname == '/random'} >
+                    <Link href="/random" as={NextLink} isBlock>
+                        Random
+                    </Link>
+                </NavbarItem>
             </NavbarContent>
             <NavbarContent justify="end">
                 <NavbarItem>
