@@ -6,7 +6,7 @@
     "distDir": "../out"
   },
   "package": {
-    "productName": "spotify-timeline",
+    "productName": "Backtrak",
     "version": "0.1.0"
   },
   "tauri": {
@@ -29,7 +29,7 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
+      "category": "Music",
       "copyright": "",
       "deb": {
         "depends": []
@@ -71,7 +71,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "Spotify Timeline",
+        "title": "Backtrak - Spotify Timeline",
         "width": 800,
         "minWidth": 800,
         "minHeight": 600
