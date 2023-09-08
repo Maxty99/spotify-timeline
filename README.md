@@ -1,5 +1,7 @@
 ## Backtrak
 
+![Build](https://github.com/maxty99/spotify-timeline/actions/workflows/main.yml/badge.svg)
+
 This is a tool I made because I downloaded my Spotify listening history and
 could not be bothered to look through the JSON file that they send you. Made
 with Next and Tauri.
