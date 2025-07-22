@@ -3,10 +3,6 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { createContext, useMemo, useState } from "react";
 
-enum SortingOrder {
-    Ascending = "Ascending",
-    Descending = "Descending",
-}
 
 type SortingCategory = "NameAscending" | "NameDescending" | "DateAscending" | "DateDescending" | "NoSorting"
 
