@@ -1,6 +1,6 @@
 use std::fmt;
 
-use chrono::{TimeZone, Utc};
+use chrono::{DateTime, Utc};
 use serde::{
     de::{Error, Visitor},
     Deserializer, Serializer,
@@ -45,10 +45,10 @@ where
     D: Deserializer<'de>,
 {
     let date_string = deserializer.deserialize_string(StringVisitor)?;
-    let date = Utc
-        .datetime_from_str(&date_string, "%+") // %+ is the ISO format
-        .map_err(Error::custom)?;
-    Ok(date)
+    // RFC 3339 is part of ISO 8601 date & time format.
+    // Thats the %Y-%m-%dT%H:%M:%S%.f%:z looking one
+    let date = DateTime::parse_from_rfc3339(&date_string).map_err(Error::custom)?;
+    Ok(date.into())
 }
 
 pub fn serialize_datetime<S>(date: &chrono::DateTime<Utc>, serializer: S) -> Result<S::Ok, S::Error>

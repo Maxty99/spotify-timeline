@@ -1,6 +1,6 @@
 [package]
 name = "spotify-timeline"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tool to visiually explore Spotify's extended listening history files"
 authors = ["Maxim Tyuterev"]
 license = "MIT"
@@ -23,22 +23,18 @@ overflow-checks = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.4.0", features = [] }
+tauri-build = { version = "2.3.1", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.4.0", features = [
-    "shell-open",
-    "fs-exists",
-    "dialog-open",
-    "fs-read-file",
-    "fs-read-dir",
-] }
-chrono = { version = "0.4.26", features = ["serde"] }
-thiserror = "1.0.44"
-toml = "0.7.6"
-rand = "0.8.5"
+tauri = { version = "2.7.0", features = [] }
+tauri-plugin-dialog = "2.0.0"
+tauri-plugin-fs = "2.0.0"
+chrono = { version = "0.4.41", features = ["serde"] }
+thiserror = "2.0.12"
+toml = "0.9.2"
+rand = "0.9.2"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.

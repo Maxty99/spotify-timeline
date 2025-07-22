@@ -1,6 +1,6 @@
 'use client'
 
-import { invoke } from "@tauri-apps/api/tauri";
+import { invoke } from "@tauri-apps/api/core"
 import { createContext, useState } from "react";
 
 type SpotifyFileContextProvidedValue = {

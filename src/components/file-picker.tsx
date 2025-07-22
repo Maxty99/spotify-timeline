@@ -4,18 +4,18 @@ import { Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrig
 import Folder from "@/components/icons/folder";
 import useSpotifyFile from "@/hooks/spotify-file-hook";
 import { useEffect, useState } from "react";
-import { BaseDirectory, FileEntry, readDir } from "@tauri-apps/api/fs";
-import { open } from "@tauri-apps/api/dialog";
-import { invoke } from "@tauri-apps/api/tauri";
+import { BaseDirectory, DirEntry, readDir } from "@tauri-apps/plugin-fs";
+import { open } from "@tauri-apps/plugin-dialog";
+import { invoke } from "@tauri-apps/api/core"
 import ChevronDown from "@/components/icons/chevron-down";
 
 
 export default function FilePicker() {
     let spotify = useSpotifyFile();
 
-    let [files, setFiles] = useState<FileEntry[]>([]);
+    let [files, setFiles] = useState<DirEntry[]>([]);
     useEffect(() => {
-        readDir('', { dir: BaseDirectory.AppData, recursive: false })
+        readDir('', { baseDir: BaseDirectory.AppData }) // not recursive by default
             .then((read_files) => {
                 setFiles(read_files);
             }).catch(console.log);
@@ -38,7 +38,7 @@ export default function FilePicker() {
                 invoke('move_files_to_data_folder', { paths: file_paths_flat_arr })
                     // Really odd chaining but kind of forced to do this to update the dropdown 
                     // with the newly added file(s)
-                    .then(() => readDir('', { dir: BaseDirectory.AppData, recursive: false })
+                    .then(() => readDir('', { baseDir: BaseDirectory.AppData })
                         .then((read_files) => {
                             setFiles(read_files);
                         }).catch(console.log))

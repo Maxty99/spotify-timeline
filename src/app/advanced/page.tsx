@@ -3,7 +3,7 @@
 import useSpotifyFile from "@/hooks/spotify-file-hook"
 import { SpotifyHistoryEntry, renderTableCell } from "@/utils/spotify-history-file";
 import { Input, Pagination, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
-import { invoke } from "@tauri-apps/api/tauri";
+import { invoke } from "@tauri-apps/api/core"
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Filters from "@/components/filters";
 import useFilters from "@/hooks/filters-hook";

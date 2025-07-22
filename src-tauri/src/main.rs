@@ -11,19 +11,16 @@ use std::{fs, sync::Mutex};
 use error::BackendError;
 
 use filter_sort::{FilterSort, FilterSortOptions};
-use rand::{seq::SliceRandom, thread_rng};
+use rand::seq::IndexedRandom;
 use spotify_history_file::{SpotifyHistoryEntry, SpotifyHistoryFile};
-use tauri::State;
+use tauri::{Manager, State};
 
 #[tauri::command]
 fn move_files_to_data_folder(
     app_handle: tauri::AppHandle,
     paths: Vec<String>,
 ) -> Result<(), BackendError> {
-    let data_folder = app_handle
-        .path_resolver()
-        .app_data_dir()
-        .ok_or(BackendError::CouldNotGetDataDir)?;
+    let data_folder = app_handle.path().app_data_dir()?;
 
     for file_path in paths.iter() {
         let file_name = file_path
@@ -109,18 +106,14 @@ fn get_random_entry(state: State<Mutex<FilterSort>>) -> Option<SpotifyHistoryEnt
         .expect("If something panicked with this, chances are this is going to panic too");
 
     let history_file = filter_sort.access_data();
-
-    history_file.data.choose(&mut thread_rng()).cloned()
+    history_file.data.choose(&mut rand::rng()).cloned()
 }
 
 fn read_spotify_file(
     app_handle: &tauri::AppHandle,
     name: &String,
 ) -> Result<Vec<SpotifyHistoryEntry>, BackendError> {
-    let mut data_folder = app_handle
-        .path_resolver()
-        .app_data_dir()
-        .ok_or(BackendError::CouldNotGetDataDir)?;
+    let mut data_folder = app_handle.path().app_data_dir()?;
     data_folder.push(name);
 
     let json_string = fs::read_to_string(data_folder)?;
@@ -144,6 +137,16 @@ fn main() {
             filename: String::from(""),
             data: vec![],
         })))
+        .setup(|app| {
+            // Ensure app specific dirs are created
+            let path = app.path().app_data_dir()?;
+            if !fs::exists(&path)? {
+                fs::create_dir(path)?;
+            }
+            Ok(())
+        })
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             move_files_to_data_folder,
             read_spotify_file_page,
