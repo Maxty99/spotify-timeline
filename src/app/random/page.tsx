@@ -4,7 +4,7 @@ import SpotifyLink from "@/components/spotify-link"
 import TableInfoCard from "@/components/table-info-card"
 import TableSongCard from "@/components/table-song-card"
 import { SpotifyHistoryEntry } from "@/utils/spotify-history-file"
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 import { invoke } from "@tauri-apps/api/core"
 import { useState } from "react"
 

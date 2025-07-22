@@ -1,5 +1,5 @@
 import { SpotifyHistoryEntry } from "@/utils/spotify-history-file"
-import { Card } from "@nextui-org/react"
+import { Card } from "@heroui/react"
 
 export default function TimelineBlock(props: { spotify_entry: SpotifyHistoryEntry }) {
     let parsed_date = Date.parse(props.spotify_entry.timestamp);

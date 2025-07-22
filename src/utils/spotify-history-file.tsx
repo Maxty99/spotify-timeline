@@ -1,7 +1,7 @@
 import SpotifyLink from "@/components/spotify-link";
 import TableInfoCard from "@/components/table-info-card";
 import TableSongCard from "@/components/table-song-card";
-import { Link } from "@nextui-org/react";
+import { Link } from "@heroui/react";
 
 // import { fetch } from '@tauri-apps/api/http';
 

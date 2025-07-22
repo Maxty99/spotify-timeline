@@ -1,6 +1,6 @@
 import { SpotifyHistoryEntry } from "@/utils/spotify-history-file";
 import { milis_to_time_string } from "@/utils/time";
-import { Card, CardBody, Image, Tooltip } from "@nextui-org/react";
+import { Card, CardBody, Image, Tooltip } from "@heroui/react";
 
 
 

@@ -1,7 +1,7 @@
 'use client'
 
 import useFilters from "@/hooks/filters-hook"
-import { Button, Checkbox, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from "@nextui-org/react";
+import { Button, Checkbox, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from "@heroui/react";
 import ChevronDown from "@/components/icons/chevron-down";
 import Search from "@/components/icons/search";
 import { useCallback } from "react";

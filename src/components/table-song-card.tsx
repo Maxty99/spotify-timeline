@@ -2,7 +2,7 @@
 
 
 import { SpotifyHistoryEntry, get_album_art_url } from "@/utils/spotify-history-file";
-import { Badge, Card, CardBody, Image, Tooltip } from "@nextui-org/react";
+import { Badge, Card, CardBody, Image, Tooltip } from "@heroui/react";
 import { useEffect, useState } from "react";
 
 export default function TableSongCard(props: { spotify_entry: SpotifyHistoryEntry }) {

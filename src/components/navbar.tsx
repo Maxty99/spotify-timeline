@@ -1,7 +1,7 @@
 'use client'
 
-import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/navbar";
-import { Link } from "@nextui-org/link";
+import { Navbar, NavbarContent, NavbarItem } from "@heroui/navbar";
+import { Link } from "@heroui/link";
 
 import { usePathname } from 'next/navigation';
 
