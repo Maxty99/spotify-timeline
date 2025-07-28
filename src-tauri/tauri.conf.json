@@ -14,7 +14,8 @@
         "title": "Backtrak - Spotify Timeline",
         "width": 1600,
         "minWidth": 800,
-        "minHeight": 600
+        "minHeight": 600,
+        "center": true
       }
     ]
   },
