@@ -6,8 +6,8 @@ authors = ["Maxim Tyuterev"]
 license = "MIT"
 repository = "https://github.com/maxty99/spotify-timeline"
 default-run = "spotify-timeline"
-edition = "2021"
-rust-version = "1.60"
+edition = "2024"
+rust-version = "1.85"
 
 [profile.release]
 panic = 'abort'
