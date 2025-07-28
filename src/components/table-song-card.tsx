@@ -1,15 +1,15 @@
-'use client'
+"use client"
 
 
 import { SpotifyHistoryEntry, get_album_art_url } from "@/utils/spotify-history-file";
-import { Badge, Card, CardBody, Image, Tooltip } from "@heroui/react";
+import { Card, CardBody, Image, Tooltip } from "@heroui/react";
 import { useEffect, useState } from "react";
 
 export default function TableSongCard(props: { spotify_entry: SpotifyHistoryEntry }) {
     const entry = props.spotify_entry;
 
-    let [thumbnail, setThumbnail] = useState<string | undefined>(undefined);
-    let [loading, setLoading] = useState(true)
+    const [thumbnail, setThumbnail] = useState<string | undefined>(undefined);
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         get_album_art_url(entry)

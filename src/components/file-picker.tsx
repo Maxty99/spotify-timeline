@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip } from "@heroui/react";
 import Folder from "@/components/icons/folder";
@@ -11,11 +11,11 @@ import ChevronDown from "@/components/icons/chevron-down";
 
 
 export default function FilePicker() {
-    let spotify = useSpotifyFile();
+    const spotify = useSpotifyFile();
 
-    let [files, setFiles] = useState<DirEntry[]>([]);
+    const [files, setFiles] = useState<DirEntry[]>([]);
     useEffect(() => {
-        readDir('', { baseDir: BaseDirectory.AppData }) // not recursive by default
+        readDir("", { baseDir: BaseDirectory.AppData }) // not recursive by default
             .then((read_files) => {
                 setFiles(read_files);
             }).catch(console.log);
@@ -34,11 +34,11 @@ export default function FilePicker() {
                 // Ensuring filepaths is a flat array
                 // in case user selects one it can be safely passed to rust
                 // since rust needs it to be a Vec
-                let file_paths_flat_arr = [file_paths].flat()
-                invoke('move_files_to_data_folder', { paths: file_paths_flat_arr })
+                const file_paths_flat_arr = [file_paths].flat()
+                invoke("move_files_to_data_folder", { paths: file_paths_flat_arr })
                     // Really odd chaining but kind of forced to do this to update the dropdown 
                     // with the newly added file(s)
-                    .then(() => readDir('', { baseDir: BaseDirectory.AppData })
+                    .then(() => readDir("", { baseDir: BaseDirectory.AppData })
                         .then((read_files) => {
                             setFiles(read_files);
                         }).catch(console.log))

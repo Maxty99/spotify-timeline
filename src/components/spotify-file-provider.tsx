@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { invoke } from "@tauri-apps/api/core"
 import { createContext, useState } from "react";
@@ -14,12 +14,12 @@ export const SpotifyFileContext = createContext<SpotifyFileContextProvidedValue>
 });
 
 export default function SpotifyFileProvider({ children }: { children: React.ReactNode }) {
-    let [fileName, setFileName] = useState("")
+    const [fileName, setFileName] = useState("")
 
-    let passedValue: SpotifyFileContextProvidedValue = {
+    const passedValue: SpotifyFileContextProvidedValue = {
         state: fileName,
         updateFileName: async (newFileName: string) => {
-            invoke('update_selected_file', { filename: newFileName })
+            invoke("update_selected_file", { filename: newFileName })
                 .then(() => setFileName(newFileName))
                 .catch(console.log)
         }

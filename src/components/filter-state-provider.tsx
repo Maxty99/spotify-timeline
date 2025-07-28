@@ -1,4 +1,7 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO: above is temp fix, feels like I implemented this really weirdly
+//       should probably refactor this whole filter stuff
+"use client"
 
 import { invoke } from "@tauri-apps/api/core"
 import { createContext, useMemo, useState } from "react";
@@ -52,15 +55,15 @@ export const FilterStateContext = createContext<FilterStateContextProvidedValue>
 });
 
 export default function FilterStateProvider({ children }: { children: React.ReactNode }) {
-    let [dateRangeEnabled, setDateRangeEnabled] = useState(false);
-    let [dateStart, setDateStart] = useState<Date>(new Date(0));
-    let [dateEnd, setDateEnd] = useState<Date>(new Date(Date.now()))
-    let [filterNulls, setFilterNulls] = useState(false);
-    let [nameQuery, setNameQuery] = useState("");
-    let [sorting, setSorting] = useState<SortingCategory>("NoSorting")
-    let [phantomData, setPhantomData] = useState(1);
+    const [dateRangeEnabled, setDateRangeEnabled] = useState(false);
+    const [dateStart, setDateStart] = useState<Date>(new Date(0));
+    const [dateEnd, setDateEnd] = useState<Date>(new Date(Date.now()))
+    const [filterNulls, setFilterNulls] = useState(false);
+    const [nameQuery, setNameQuery] = useState("");
+    const [sorting, setSorting] = useState<SortingCategory>("NoSorting")
+    const [phantomData, setPhantomData] = useState(1);
 
-    let passedValue = useMemo<FilterStateContextProvidedValue>(() => {
+    const passedValue = useMemo<FilterStateContextProvidedValue>(() => {
 
 
         return {
@@ -90,7 +93,7 @@ export default function FilterStateProvider({ children }: { children: React.Reac
             updateSorting: (newSorting) => {
                 setSorting(newSorting);
             },
-            apply: () => invoke<void>('update_filters', {
+            apply: () => invoke<void>("update_filters", {
                 filters: {
                     date_range: dateRangeEnabled ?
                         { start: dateStart, end: dateEnd } :

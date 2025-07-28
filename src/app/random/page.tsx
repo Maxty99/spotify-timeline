@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import SpotifyLink from "@/components/spotify-link"
 import TableInfoCard from "@/components/table-info-card"
@@ -10,16 +10,11 @@ import { useState } from "react"
 
 export default function Random() {
 
-    let [randomEntry, setRandomEntry] = useState<SpotifyHistoryEntry | undefined>(undefined)
-    let [loading, setLoading] = useState(false);
+    const [randomEntry, setRandomEntry] = useState<SpotifyHistoryEntry | undefined>(undefined)
 
-    let getRandomEntry = () => {
-        setLoading(true);
-        invoke<SpotifyHistoryEntry>('get_random_entry')
-            .then((entry) => {
-                setRandomEntry(entry);
-                setLoading(false);
-            })
+    const getRandomEntry = () => {
+        invoke<SpotifyHistoryEntry>("get_random_entry")
+            .then(setRandomEntry)
             .catch(console.log)
     };
 

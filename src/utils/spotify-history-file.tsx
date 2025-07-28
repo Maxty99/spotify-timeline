@@ -1,7 +1,6 @@
 import SpotifyLink from "@/components/spotify-link";
 import TableInfoCard from "@/components/table-info-card";
 import TableSongCard from "@/components/table-song-card";
-import { Link } from "@heroui/react";
 
 // Commented fields were previously present in
 // spotify data downloads but now cause errors
@@ -44,35 +43,17 @@ export function renderTableCell(entry: SpotifyHistoryEntry, columnKey: React.Key
     }
 }
 
-type SpotifyOembed = {
-    html: string,
-    width?: number,
-    height?: number,
-    version: string,
-    provied_name: string,
-    provider_url: string,
-    type: string,
-    title: string,
-    thumbnail_url?: string,
-    thumbnail_width?: number,
-    thumbnail_height?: number,
-}
-
-
 export async function get_album_art_url(entry: SpotifyHistoryEntry): Promise<string | undefined> {
     if (!entry.spotify_track_uri) return undefined;
 
-    try {
-        let params = new URLSearchParams({
-            url: "spotify:track:" + entry.spotify_track_uri
-        });
-        let resp = await fetch("https://open.spotify.com/oembed?" + params, {
-            method: "GET",
-        });
-        let json = await resp.json()
+    const params = new URLSearchParams({
+        url: "spotify:track:" + entry.spotify_track_uri
+    });
+    const resp = await fetch("https://open.spotify.com/oembed?" + params, {
+        method: "GET",
+    });
+    const json = await resp.json()
 
-        return json["thumbnail_url"];
-    } catch (error) {
-        throw error
-    }
+    return json["thumbnail_url"];
+
 }

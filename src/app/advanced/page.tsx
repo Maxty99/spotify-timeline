@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import useSpotifyFile from "@/hooks/spotify-file-hook"
 import { SpotifyHistoryEntry, renderTableCell } from "@/utils/spotify-history-file";
@@ -9,8 +9,8 @@ import Filters from "@/components/filters";
 import useFilters from "@/hooks/filters-hook";
 
 export default function Advanced() {
-    let spotify = useSpotifyFile();
-    let filters = useFilters();
+    const spotify = useSpotifyFile();
+    const filters = useFilters();
 
 
     const [page, setPage] = useState<number>(1);
@@ -20,7 +20,7 @@ export default function Advanced() {
     const [validPageSelected, setValidPageSelected] = useState(true);
 
     useEffect(() => {
-        invoke<number>('get_number_of_spotify_file_pages')
+        invoke<number>("get_number_of_spotify_file_pages")
             .then((number_of_pages) => {
                 setTotalPages(number_of_pages);
                 setPage(1);
@@ -31,7 +31,7 @@ export default function Advanced() {
 
     useEffect(() => {
         if (page) {
-            invoke<SpotifyHistoryEntry[]>('read_spotify_file_page', { page })
+            invoke<SpotifyHistoryEntry[]>("read_spotify_file_page", { page })
                 .then((page_of_entries) => {
                     setlist(page_of_entries);
                     setIsLoading(false);
@@ -49,7 +49,7 @@ export default function Advanced() {
 
     const onJumpToPageChange = useCallback(
         (page_string: string) => {
-            let new_page = parseInt(page_string);
+            const new_page = parseInt(page_string);
             if (new_page == page) return;
             if (new_page < totalPages && new_page > 0) {
                 setIsLoading(true);
@@ -61,7 +61,7 @@ export default function Advanced() {
         }, [page, totalPages]
     );
 
-    let bottomContent = useMemo(() => {
+    const bottomContent = useMemo(() => {
         return (<div className="flex items-center">
             <Pagination
                 showControls

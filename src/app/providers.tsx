@@ -1,7 +1,7 @@
-'use client'
+"use client"
 
-import SpotifyFileProvider from '@/components/spotify-file-provider';
-import FilterStateProvider from '@/components/filter-state-provider';
+import SpotifyFileProvider from "@/components/spotify-file-provider";
+import FilterStateProvider from "@/components/filter-state-provider";
 import { HeroUIProvider } from "@heroui/react"
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 

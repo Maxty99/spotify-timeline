@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import useFilters from "@/hooks/filters-hook"
 import { Button, Checkbox, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from "@heroui/react";
@@ -7,12 +7,12 @@ import Search from "@/components/icons/search";
 import { useCallback } from "react";
 
 export default function Filters() {
-    let filters = useFilters();
+    const filters = useFilters();
 
     // Gotta use these callbacks to format the date the way the input value wants 
     // while making sure inputs remain controlled
-    let get_date_range_start_string = useCallback(() => filters.state.date_range.start.toISOString().replace("Z", ""), [filters.state.date_range.start]);
-    let get_date_range_end_string = useCallback(() => filters.state.date_range.end.toISOString().replace("Z", ""), [filters.state.date_range.end]);
+    const get_date_range_start_string = useCallback(() => filters.state.date_range.start.toISOString().replace("Z", ""), [filters.state.date_range.start]);
+    const get_date_range_end_string = useCallback(() => filters.state.date_range.end.toISOString().replace("Z", ""), [filters.state.date_range.end]);
 
     return (<div className="flex flex-row gap-4 w-full justify-start items-center pt-1">
 

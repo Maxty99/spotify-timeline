@@ -1,12 +1,12 @@
-'use client'
+"use client"
 
 import { Navbar, NavbarContent, NavbarItem } from "@heroui/navbar";
 import { Link } from "@heroui/link";
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 
-import ThemeSwitcher from './theme-switcher';
-import FilePicker from './file-picker';
+import ThemeSwitcher from "./theme-switcher";
+import FilePicker from "./file-picker";
 import NextLink from "next/link";
 
 export default function AppNavbar() {
@@ -19,17 +19,17 @@ export default function AppNavbar() {
             </NavbarContent>
             <NavbarContent justify="center">
 
-                <NavbarItem isActive={pathname == '/'} >
+                <NavbarItem isActive={pathname == "/"} >
                     <Link href="/" as={NextLink} isBlock>
                         Home
                     </Link>
                 </NavbarItem>
-                <NavbarItem isActive={pathname == '/advanced'}>
+                <NavbarItem isActive={pathname == "/advanced"}>
                     <Link href="/advanced" as={NextLink} isBlock>
                         Advanced View
                     </Link>
                 </NavbarItem>
-                <NavbarItem isActive={pathname == '/random'} >
+                <NavbarItem isActive={pathname == "/random"} >
                     <Link href="/random" as={NextLink} isBlock>
                         Random
                     </Link>
