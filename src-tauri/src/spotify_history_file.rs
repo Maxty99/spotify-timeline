@@ -13,19 +13,30 @@ const ENTRIES_PER_PAGE: usize = 4;
 const fn return_one() -> u64 {
     1
 }
+
+// Commented fields were previously present in
+// spotify data downloads but now cause errors
+// upon deserialization
+//
+// The official sources are inconsistent:
+// - ReadMe pdf states they should exist
+// - https://support.spotify.com/us/article/understanding-my-data/
+//
+// Just gonna remove them until spotify gets it together
+// They weren't used anywhere anyway
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct SpotifyHistoryEntry {
     #[serde(rename(deserialize = "ts"))]
     #[serde(deserialize_with = "deserialize_datetime")]
     #[serde(serialize_with = "serialize_datetime")]
     pub timestamp: chrono::DateTime<Utc>,
-    pub username: String,
+    // pub username: String,
     pub platform: String,
     #[serde(deserialize_with = "deserialize_milis")]
     #[serde(serialize_with = "serialize_milis")]
     pub ms_played: chrono::Duration,
     pub conn_country: String,
-    pub ip_addr_decrypted: String,
+    // pub ip_addr_decrypted: String,
     pub user_agent_decrypted: Option<String>,
     pub master_metadata_track_name: Option<String>,
     pub master_metadata_album_artist_name: Option<String>,

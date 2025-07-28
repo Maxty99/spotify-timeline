@@ -3,15 +3,23 @@ import TableInfoCard from "@/components/table-info-card";
 import TableSongCard from "@/components/table-song-card";
 import { Link } from "@heroui/react";
 
-// import { fetch } from '@tauri-apps/api/http';
-
+// Commented fields were previously present in
+// spotify data downloads but now cause errors
+// upon deserialization 
+//
+// The official sources are inconsistent:
+// - ReadMe pdf states they should exist
+// - https://support.spotify.com/us/article/understanding-my-data/ 
+// 
+// Just gonna remove them until spotify gets it together
+// They weren't used anywhere anyway
 export type SpotifyHistoryEntry = {
     timestamp: string;
-    username: string;
+    // username: string;
     platform: string;
     ms_played: number;
     conn_country: string;
-    ip_addr_decrypted: string;
+    // ip_addr_decrypted: string;
     user_agent_decrypted: string;
     master_metadata_track_name?: string;
     master_metadata_album_artist_name?: string;
